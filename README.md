@@ -1,3 +1,6 @@
+### WIP
+this package is under development
+
 ### image-renderer
 
 Renders React elements into PNG files
