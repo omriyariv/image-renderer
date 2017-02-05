@@ -24,7 +24,7 @@ var css = `
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-  font-family: 'Bree Serif', serif;
+  font-family:'Bree Serif', serif;
 	font-size:15px;
 	padding:6px 15px;
 	text-decoration:none;

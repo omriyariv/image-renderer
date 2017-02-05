@@ -1,4 +1,4 @@
-#### image-renderer
+### image-renderer
 
 Renders React elements into PNG files
 ```js
