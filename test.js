@@ -1,5 +1,6 @@
 const React = require('react')
-const renderToImage = require('./index.js')
+const { render, close } = require('./index.js')
+const fs = require('fs')
 
 const Button = (props) => (
   <a className='button'>
@@ -27,10 +28,28 @@ const css = `
 }
 `
 
-for (let i = 0; i < 5; i++) {
+let done = 0
+
+for (let i = 0; i < 100; i++) {
   const element = <Button text={`testing${i}`}/>
-  renderToImage(element, {
-    css: css,
-    outputPath: `./testing${i}.png`
+  render(element, {
+    css: css
+  })
+  .then((img) => {
+    try {
+      done++
+      console.log('success', img.data.length, done)
+      if (done === 100) {
+        close()
+      }
+    } catch (e) {
+      console.log('error', e)
+    }
   })
 }
+
+// BENCHMARKS:
+// 100 screenshots - writing to fs, single browser (27, 34, 33)
+// 100 screenshots - no fs writing, single browser (29, 30, 29)
+// 100 screenshots - no fs writing, 3 browsers (27, 27, 26)
+// 100 screenshots - no fs writing, 5 browsers (26, 28, 27)

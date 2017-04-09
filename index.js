@@ -1,6 +1,6 @@
-var Nightmare = require('nightmare');
 var ReactDOMServer = require('react-dom/server');
 var express = require('express');
+var screenshot = require('electron-screenshot-service');
 
 var makeHtml = (content, css) => (`
   <!doctype html>
@@ -23,22 +23,29 @@ server.get('/', (req, res) => {
   res.send(makeHtml(decodedParams.html, decodedParams.css));
 })
 
-server.listen(9000);
+var serverHandle = server.listen(9000);
 
-var render = function (element, options) {
-  var nightmare = Nightmare();
+var render = (element, options) => {
   var urlParams = {
     html: ReactDOMServer.renderToStaticMarkup(element),
     css: options.css || ''
   };
 
   var encodedParams = encodeURIComponent(JSON.stringify(urlParams));
-  return nightmare
-    .goto(`http://localhost:9000?params=${encodedParams}`)
-    .evaluate(function () { return document.fonts.ready })
-    .screenshot(options.outputPath)
-    .end()
-    .then(function () {})
+
+  return screenshot({
+    url : `http://localhost:9000?params=${encodedParams}`,
+    width : 1024,
+    height : 768
+  });
 };
 
-module.exports = render;
+var close = () => {
+  screenshot.close();
+  serverHandle.close();
+}
+
+module.exports = {
+  render,
+  close
+};
